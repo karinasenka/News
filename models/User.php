@@ -20,6 +20,7 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne(['id' => $id]);
     }
 
+
     public static function findIdentityByAccessToken($token, $type = null)
     {
         return static::findOne(['access_token' => $token]);
@@ -70,4 +71,10 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->access_token = Yii::$app->security->generateRandomString(64);
     }
+    // ===== Ролі =====
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
 }
