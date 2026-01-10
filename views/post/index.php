@@ -1,12 +1,32 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
 
 $this->registerCssFile('@web/css/it_post.css');
 ?>
 
-<h1 class="page-title">ІТ-Новини</h1>
+<?php
+/** @var $categories app\models\Category[] */
+/** @var $activeCategoryId int */
+/** @var $tag string|null */
+?>
+<div class="news-page">
+    <div class="categories-wrap">
+        <div class="categories-bar">
+            <a class="cat-btn <?= $activeCategoryId ? '' : 'active' ?>"
+                href="<?= Url::to(['post/index', 'PostSearch' => ['tags' => $tag]]) ?>">
+                Всі
+            </a>
 
+            <?php foreach ($categories as $cat): ?>
+                <a class="cat-btn <?= ($activeCategoryId === (int)$cat->id) ? 'active' : '' ?>"
+                    href="<?= Url::to(['post/index', 'category_id' => $cat->id, 'PostSearch' => ['tags' => $tag]]) ?>">
+                    <?= Html::encode($cat->name) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>    
 <div class="posts-grid">
 <?php foreach ($posts as $post): ?>
     <div class="post-card">
@@ -31,6 +51,16 @@ $this->registerCssFile('@web/css/it_post.css');
             </span>
         </div>
 
+        <?php if (!empty($post->tags)): ?>
+            <div class="tags-row">
+                <?php foreach (preg_split('/\s*,\s*/u', $post->tags, -1, PREG_SPLIT_NO_EMPTY) as $tag): ?>
+                    <span class="tag-pill">
+                        #<?= Html::encode($tag) ?>
+                    </span>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
         <p class="post-text">
             <?= Html::encode($post->text) ?>
         </p>
@@ -44,4 +74,5 @@ $this->registerCssFile('@web/css/it_post.css');
 
 <div class="pagination">
     <?= LinkPager::widget(['pagination' => $pagination]) ?>
+</div>
 </div>

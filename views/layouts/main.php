@@ -18,6 +18,11 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+
+$isGuest = Yii::$app->user->isGuest;
+$isAdmin = !$isGuest && method_exists(Yii::$app->user->identity, 'isAdmin') && Yii::$app->user->identity->isAdmin();
+
+$tag = Yii::$app->request->get('PostSearch')['tags'] ?? '';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -26,32 +31,52 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+
+<body class="d-flex flex-column h-100 site-body <?= Yii::$app->controller->id . '-' . Yii::$app->controller->action->id ?>">
+
 <?php $this->beginBody() ?>
 
 <header id="header">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+        'brandLabel' => false,
+        'options' => ['class' => 'navbar navbar-expand-lg navbar-dark fixed-top app-navbar'],
+        'containerOptions' => ['class' => 'container-fluid px-4'],
     ]);
+
+    echo Html::a('<span class="brand-mark">IT News</span>', ['/post/index'], [
+        'class' => 'navbar-brand',
+        'encode' => false,
+    ]);
+
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            Yii::$app->user->isGuest
-                ? ['label' => 'Login', 'url' => ['/auth/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/auth/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->name . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-        ]
+        'options' => ['class' => 'navbar-nav me-3'],
+        'items' => array_values(array_filter([
+            ['label' => 'Новини', 'url' => ['/post/index']],
+            $isAdmin ? ['label' => 'Адмін-панель', 'url' => ['/admin/post/index']] : null,
+        ])),
     ]);
+    echo '<div class="d-flex align-items-center ms-auto gap-2">';
+
+    echo Html::beginForm(['/post/index'], 'get', ['class' => 'header-search d-none d-md-flex']);
+    echo Html::input('text', 'PostSearch[tags]', $tag, [
+        'class' => 'form-control form-control-sm header-search-input',
+        'placeholder' => 'Пошук по мітках…',
+        'autocomplete' => 'off',
+    ]);
+    echo Html::submitButton('Пошук', ['class' => 'header-search-btn']);
+    echo Html::endForm();
+
+    if ($isGuest) {
+        echo Html::a('Увійти', ['/auth/login'], ['class' => 'btn btn-sm btn-outline-light header-auth-btn']);
+    } else {
+        echo Html::beginForm(['/auth/logout'], 'post', ['class' => 'd-inline']);
+        echo Html::submitButton('Вийти', ['class' => 'btn btn-sm btn-outline-light header-auth-btn']);
+        echo Html::endForm();
+    }
+
+    echo '</div>';
+
     NavBar::end();
     ?>
 </header>
@@ -65,15 +90,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <?= $content ?>
     </div>
 </main>
-
-<footer id="footer" class="mt-auto py-3 bg-light">
-    <div class="container">
-        <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
-        </div>
-    </div>
-</footer>
 
 <?php $this->endBody() ?>
 </body>

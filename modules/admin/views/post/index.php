@@ -43,6 +43,15 @@ $pagination = $dataProvider->getPagination();
                 <?= ((int)$post->published === 1) ? 'Опубліковано' : 'Чернетка' ?>
             </span>
         </div>
+        <?php if (!empty($post->tags)): ?>
+            <div class="tags-row">
+                <?php foreach (preg_split('/\s*,\s*/u', $post->tags, -1, PREG_SPLIT_NO_EMPTY) as $tag): ?>
+                    <span class="tag-pill">
+                        #<?= Html::encode($tag) ?>
+                    </span>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
         <p class="post-text">
             <?= Html::encode($post->text) ?>

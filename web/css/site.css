@@ -98,3 +98,113 @@ a.desc:after {
 .form-check-input:focus {
   box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.25);
 }
+.site-body {
+  padding-top: 76px;
+}
+
+/* HEADER */
+.app-navbar {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 23, 42, 0.96),
+    rgba(2, 6, 23, 0.92)
+  );
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.app-navbar .navbar-brand {
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  font-size: 20px;
+}
+
+.app-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-weight: 650;
+  padding: 8px 12px !important;
+  border-radius: 10px;
+}
+
+.app-navbar .nav-link:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Search in header */
+.header-search {
+  gap: 10px;
+  align-items: center;
+}
+
+.header-search-input {
+  width: 360px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.header-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.header-search-input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow: none;
+  border-color: rgba(56, 189, 248, 0.65);
+}
+
+/* Search button */
+.header-search-btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+  backdrop-filter: blur(6px);
+}
+
+.header-search-btn:hover {
+  background: rgba(56, 189, 248, 0.28);
+  border-color: rgba(56, 189, 248, 0.6);
+  color: #fff;
+}
+
+.header-search-btn:active {
+  transform: translateY(1px);
+}
+
+.header-auth-btn {
+  border-radius: 14px;
+  padding: 6px 14px;
+  font-weight: 800;
+}
+
+.header-auth-btn.btn-outline-light {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.header-auth-btn.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  border-color: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 991px) {
+  .header-search-input {
+    width: 220px;
+  }
+}

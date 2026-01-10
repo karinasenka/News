@@ -8,6 +8,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'timeZone' => 'Europe/Kyiv',
     'bootstrap' => ['log'],
+    'defaultRoute' => 'post/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

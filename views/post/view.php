@@ -4,6 +4,7 @@ use yii\bootstrap5\ActiveForm;
 use app\models\Comment;
 
 $this->registerCssFile('@web/css/it_post.css');
+
 $this->title = $post->title;
 
 $url = Yii::$app->request->absoluteUrl;
@@ -12,7 +13,7 @@ $title = $post->title;
 $commentModel = new Comment();
 $commentModel->post_id = $post->id;
 ?>
-
+<div class="post-view">
 <h1 class="page-title" style="text-align:center;">
     <?= Html::encode($post->title) ?>
 </h1>
@@ -36,6 +37,16 @@ $commentModel->post_id = $post->id;
             Дата: <?= Html::encode($post->created_at) ?>
         </span>
     </div>
+    
+    <?php if (!empty($post->tags)): ?>
+        <div class="tags-row">
+            <?php foreach (preg_split('/\s*,\s*/u', $post->tags, -1, PREG_SPLIT_NO_EMPTY) as $tag): ?>
+                <span class="tag-pill">
+                    #<?= Html::encode($tag) ?>
+                </span>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <div class="post-text" style="white-space: pre-line;">
         <?= Html::encode($post->text) ?>
@@ -166,4 +177,5 @@ $commentModel->post_id = $post->id;
 
         </div>
     <?php endforeach; ?>
+</div>
 </div>

@@ -21,7 +21,14 @@ class Post extends ActiveRecord
             [['text'], 'string'],
             [['created_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
-            [['imageFile'], 'file', 'extensions' => 'png, jpg, jpeg, webp', 'skipOnEmpty' => true,'checkExtensionByMimeType' => false],
+            [['tags'], 'string', 'max' => 255],
+            [['tags'], 'filter', 'filter' => function($v){
+                $v = trim((string)$v);
+                $v = preg_replace('/\s*,\s*/u', ', ', $v);
+                $v = preg_replace('/\s{2,}/u', ' ', $v);
+                return $v;
+            }],
+            [['imageFile'], 'file', 'extensions' => 'png, jpg, jpeg, webp', 'skipOnEmpty' => true],
         ];
     }
 
@@ -33,8 +40,10 @@ class Post extends ActiveRecord
             'text' => 'Текст',
             'created_at' => 'Дата створення',
             'published' => 'Опубліковано',
+            'tags' => 'Мітки (через кому)',
         ];
     }
+
 
     public function getCategory()
     {

@@ -80,22 +80,24 @@ public function actionCreate()
 {
     $model = new Post();
 
-    if ($this->request->isPost) {
-        if ($model->load($this->request->post())) {
+    if ($this->request->isPost && $model->load($this->request->post())) {
 
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+        $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+        if ($model->validate()) {
 
             if ($model->imageFile) {
                 $fileName = time() . '_' . $model->imageFile->baseName . '.' . $model->imageFile->extension;
                 $path = Yii::getAlias('@webroot/uploads/') . $fileName;
 
-                if ($model->imageFile->saveAs($path)) {
+                if ($model->imageFile->saveAs($path, false)) {
                     $model->image = 'uploads/' . $fileName;
                 }
             }
+
             $model->created_at = date('Y-m-d H:i:s');
 
-            if ($model->save()) {
+            if ($model->save(false)) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -107,6 +109,7 @@ public function actionCreate()
         'model' => $model,
     ]);
 }
+
 
 
     /**
@@ -125,19 +128,22 @@ public function actionUpdate($id)
 
         $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
-        if ($model->imageFile) {
-            $fileName = time() . '_' . $model->imageFile->baseName . '.' . $model->imageFile->extension;
-            $path = Yii::getAlias('@webroot/uploads/') . $fileName;
+        if ($model->validate()) {
 
-            if ($model->imageFile->saveAs($path)) {
-                $model->image = 'uploads/' . $fileName;
+            if ($model->imageFile) {
+                $fileName = time() . '_' . $model->imageFile->baseName . '.' . $model->imageFile->extension;
+                $path = Yii::getAlias('@webroot/uploads/') . $fileName;
+
+                if ($model->imageFile->saveAs($path, false)) {
+                    $model->image = 'uploads/' . $fileName;
+                }
+            } else {
+                $model->image = $oldImage;
             }
-        } else {
-            $model->image = $oldImage;
-        }
 
-        if ($model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->save(false)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
     }
 

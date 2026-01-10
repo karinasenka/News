@@ -22,6 +22,9 @@ use app\models\Category;
 
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'tags')
+    ->textInput(['maxlength' => true, 'placeholder' => 'Наприклад: ШІ, веб, дослідження']) ?>
+
     <?= $form->field($model, 'published')->checkbox()->label('Опубліковано') ?>
 
     <?= $form->field($model, 'imageFile')->fileInput()->label('Зображення') ?>
